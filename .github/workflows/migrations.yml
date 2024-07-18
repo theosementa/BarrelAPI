@@ -1,0 +1,26 @@
+name: Migrations
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'Source/App/Migrations/**'
+
+jobs:
+  deploy:
+    name: Run migrations
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: executing remote ssh commands using ssh key
+        id: ssh_deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          script: cd C:\Users\Theo\Documents\BarrelAPI && runMigrations.bat
