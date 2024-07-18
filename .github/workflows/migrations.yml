@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'Source/App/Migrations/**'
+      - 'Sources/App/Migrations/**'
 
 jobs:
   deploy:
