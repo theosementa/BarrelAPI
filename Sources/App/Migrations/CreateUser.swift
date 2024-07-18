@@ -16,7 +16,7 @@ struct CreateUser: AsyncMigration {
             .field("createdAt", .string, .required, .sql(.default(Date().toISO8601String())))
             .create()
     }
-
+    
     func revert(on database: any Database) async throws {
         try await database.schema("users").delete()
     }
