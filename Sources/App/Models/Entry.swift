@@ -49,3 +49,16 @@ final class Entry: Model, @unchecked Sendable, Authenticatable {
     }
     
 }
+
+extension Entry {
+    
+    func toResponse() -> EntryResponse {
+        return .init(
+            price: self.price,
+            mileage: self.mileage,
+            liters: self.liters,
+            dateIso: self.dateIso
+        )
+    }
+    
+}

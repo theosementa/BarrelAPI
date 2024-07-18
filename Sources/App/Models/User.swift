@@ -35,3 +35,14 @@ final class User: Model, @unchecked Sendable, Authenticatable {
         self.createdAt = createdAt
     }
 }
+
+extension User {
+    
+    func toResponse() -> UserResponse {
+        return .init(
+            id: self.id ?? 0,
+            token: self.token,
+            entries: self.entries.map { $0.toResponse() }
+        )
+    }
+}
