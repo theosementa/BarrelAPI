@@ -12,25 +12,24 @@ struct UserController: RouteCollection {
     
     @Sendable
     func register(req: Request) async throws -> UserResponse {
-        let token = UUID().uuidString
-        let user = User(token: token)
+        let user = User()
         try await user.save(on: req.db)
-        
-        guard let reloadedUser = try await User.query(on: req.db)
-                .filter(\.$token == token)
-                .first()
-            else { throw Abort(.internalServerError, reason: "Failed to reload user after saving") }
-        
-        return reloadedUser.toResponse()
+
+        return .init(
+            id: try user.requireID(),
+            token: try TokenManager.generateToken(from: req, for: user),
+            entries: []
+        )
     }
     
     @Sendable
     func login(req: Request) async throws -> UserResponse {
-        let body = try req.content.decode(UserLoginBody.self)
+        let userID = try TokenManager.getUserID(from: req)
         
         guard let user = try await User.query(on: req.db)
-            .filter(\.$token == body.token)
-            .first()
+                .filter(\.$id == userID)
+                .with(\.$entries)
+                .first()
         else { throw Abort(.internalServerError, reason: "Fail to fetch user") }
         
         return user.toResponse()
@@ -41,8 +40,9 @@ struct UserController: RouteCollection {
 extension UserController {
     func boot(routes: RoutesBuilder) throws {
         let user = routes.grouped("user")
+        let protected = user.grouped(JWTMiddleware())
         
         user.get("register", use: register)
-        user.post("login", use: login)
+        protected.get("login", use: login)
     }
 }

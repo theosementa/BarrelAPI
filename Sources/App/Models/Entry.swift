@@ -54,6 +54,7 @@ extension Entry {
     
     func toResponse() -> EntryResponse {
         return .init(
+            id: self.id,
             price: self.price,
             mileage: self.mileage,
             liters: self.liters,

@@ -1,11 +1,15 @@
 import Vapor
 
 func routes(_ app: Application) throws {
+    let protected = app.grouped(JWTMiddleware())
+    
     app.get { req async in
         "It works!"
     }
 
-    app.get("hello") { req async -> String in
-        "Hello, world!"
-    }
+    try protected
+        .register(collection: EntryController())
+    
+    try app
+        .register(collection: UserController())
 }

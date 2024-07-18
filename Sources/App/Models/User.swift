@@ -13,9 +13,6 @@ final class User: Model, @unchecked Sendable, Authenticatable {
     
     @ID(custom: .id, generatedBy: .database)
     var id: Int?
-
-    @Field(key: "token")
-    var token: String
     
     @Timestamp(key: "createdAt", on: .create, format: .iso8601)
     var createdAt: Date?
@@ -27,11 +24,9 @@ final class User: Model, @unchecked Sendable, Authenticatable {
     
     init(
         id: Int? = nil,
-        token: String,
         createdAt: Date? = nil
     ) {
         self.id = id
-        self.token = token
         self.createdAt = createdAt
     }
 }
@@ -41,7 +36,6 @@ extension User {
     func toResponse() -> UserResponse {
         return .init(
             id: self.id ?? 0,
-            token: self.token,
             entries: self.entries.map { $0.toResponse() }
         )
     }

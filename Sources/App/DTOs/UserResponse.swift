@@ -9,6 +9,6 @@ import Vapor
 
 struct UserResponse: Content {
     var id: Int
-    var token: String
+    var token: String?
     var entries: [EntryResponse]
 }

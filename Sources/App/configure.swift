@@ -1,6 +1,7 @@
 import Vapor
 import Fluent
 import FluentPostgresDriver
+import JWT
 
 // configures your application
 public func configure(_ app: Application) async throws {
@@ -40,6 +41,9 @@ public func configure(_ app: Application) async throws {
         ),
         as: .psql
     )
+    
+    // Configure JWT
+    app.jwt.signers.use(.hs256(key: "your-secret-key"))
     
     app.migrations.add(CreateUser())
     app.migrations.add(CreateEntry())

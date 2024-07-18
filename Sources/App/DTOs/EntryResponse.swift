@@ -8,6 +8,7 @@
 import Vapor
 
 struct EntryResponse: Content {
+    var id: Int?
     var price: Double
     var mileage: Int
     var liters: Double?
