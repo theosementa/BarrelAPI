@@ -7,6 +7,7 @@
 
 import Vapor
 import Fluent
+import VaporToOpenAPI
 
 struct EntryController: RouteCollection {
     
@@ -65,7 +66,37 @@ extension EntryController {
         let entries = routes.grouped("entry")
         
         entries.get(use: getEntries)
+            .openAPI(
+                summary: "Get all entries",
+                description: "Get all entries for a user",
+                response: .type([EntryResponse].self),
+                responseContentType: .application(.json)
+            )
+            .response(statusCode: 200)
+            .response(statusCode: 500, description: "Internal error")
+        
         entries.post(use: createEntry)
+            .openAPI(
+                summary: "Create entry",
+                description: "Create a new entry for a user",
+                body: .type(EntryBody.self),
+                contentType: .application(.json),
+                response: .type(EntryResponse.self),
+                responseContentType: .application(.json)
+            )
+            .response(statusCode: 201)
+            .response(statusCode: 500, description: "Internal error")
+        
         entries.delete(":entryID", use: deleteEntry)
+            .openAPI(
+                summary: "Delete entry",
+                description: "Delete an entry of a user",
+                response: .type(HTTPStatusResponse.self),
+                responseContentType: .application(.json)
+            )
+            .response(statusCode: 200)
+            .response(statusCode: 400, description: "Bad Request")
+            .response(statusCode: 404, description: "Not found")
+            .response(statusCode: 500, description: "Internal error")
     }
 }

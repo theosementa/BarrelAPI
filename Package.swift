@@ -18,6 +18,9 @@ let package = Package(
         
         // JWT
         .package(url: "https://github.com/vapor/jwt.git", from: "4.0.0"),
+        
+//        // Swagger
+        .package(url: "https://github.com/dankinsoid/VaporToOpenAPI.git", from: "4.6.3")
     ],
     targets: [
         .executableTarget(
@@ -32,7 +35,10 @@ let package = Package(
                 .product(name: "FluentPostgresDriver", package: "fluent-postgres-driver"),
                 
                 // JWT
-                .product(name: "JWT", package: "jwt")
+                .product(name: "JWT", package: "jwt"),
+                
+                // Swagger
+                .product(name: "VaporToOpenAPI", package: "VaporToOpenAPI"),
             ],
             swiftSettings: swiftSettings
         ),

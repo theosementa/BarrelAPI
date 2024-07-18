@@ -48,5 +48,12 @@ public func configure(_ app: Application) async throws {
     app.migrations.add(CreateUser())
     app.migrations.add(CreateEntry())
     
+    app.middleware.use(
+            FileMiddleware(
+                publicDirectory: app.directory.publicDirectory,
+                defaultFile: "Swagger/index.html"
+            )
+        )
+    
     try routes(app)
 }

@@ -3,10 +3,10 @@ import Vapor
 func routes(_ app: Application) throws {
     let protected = app.grouped(JWTMiddleware())
     
-    app.get { req async in
-        "It works!"
-    }
-
+    try app
+        .grouped("swagger")
+        .register(collection: OpenAPIController())
+    
     try protected
         .register(collection: EntryController())
     

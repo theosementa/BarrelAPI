@@ -7,6 +7,7 @@
 
 import Vapor
 import Fluent
+import VaporToOpenAPI
 
 struct UserController: RouteCollection {
     
@@ -43,6 +44,22 @@ extension UserController {
         let protected = user.grouped(JWTMiddleware())
         
         user.get("register", use: register)
+            .openAPI(
+                summary: "New user",
+                description: "Register a new user",
+                response: .type(UserResponse.self),
+                responseContentType: .application(.json)
+            )
+            .response(statusCode: 200)
+        
         protected.get("login", use: login)
+            .openAPI(
+                summary: "Login",
+                description: "Login a user | JWT is needed !",
+                response: .type(UserResponse.self),
+                responseContentType: .application(.json)
+            )
+            .response(statusCode: 200)
+            .response(statusCode: 500, description: "Internal error")
     }
 }
